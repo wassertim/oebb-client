@@ -46,6 +46,14 @@ export interface Product {
     prodCtx: ProductContext;
 }
 
+export interface JourneyProduct {
+    prodX: number;
+    fLocX: number;
+    tLocX: number;
+    fIdx: number;
+    tIdx: number;
+}
+
 export interface Operator {
     name: string;
     icoX: number;
@@ -244,14 +252,6 @@ export interface JourneyMessage {
     tLocX: number;
     tagL: string[];
     sort: number;
-}
-
-export interface JourneyProduct {
-    prodX: number;
-    fLocX: number;
-    tLocX: number;
-    fIdx: number;
-    tIdx: number;
 }
 
 export interface Direction {
