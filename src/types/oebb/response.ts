@@ -1148,26 +1148,68 @@ export interface Connection {
     hasDelayInfo: boolean;
 }
 
+/**
+ * Interface representing the format of a duration.
+ */
 export interface DurationFormat {
+    /**
+     * Style index for the duration format.
+     */
     styleX: number;
 }
 
+/**
+ * Interface representing the context for reconnection.
+ */
 export interface ReconnectionContext {
+    /**
+     * Context string for the reconnection.
+     */
     ctx: string;
 }
 
+/**
+ * Interface representing the result of a traffic-related operation.
+ */
 export interface TrafficResult {
+    /**
+     * Status code of the traffic result.
+     */
     statusCode: string;
+
+    /**
+     * Extended content action bar associated with the traffic result.
+     */
     extContActionBar: ExtContActionBar;
 }
 
+/**
+ * Interface representing the content of an action bar.
+ */
 export interface ActionBarContent {
+    /**
+     * Type of the content.
+     */
     type: string;
+
+    /**
+     * Content string.
+     */
     content: string;
 }
 
+/**
+ * Interface representing an extended content action bar.
+ */
 export interface ExtContActionBar {
+    /**
+     * Text for the action bar.
+     */
     text: string;
+
+    /**
+     * Content associated with the action bar.
+     */
     content: ActionBarContent;
 }
 
@@ -1266,20 +1308,58 @@ export interface CommonData {
     timeStyleL: TimeStyle[];
 }
 
+/**
+ * Interface representing the scoring of a connection group.
+ */
 export interface ConnectionGroupScoring {
+    /**
+     * Type of the scoring.
+     */
     type: string;
+
+    /**
+     * List of connection group scores.
+     */
     conScoreL: ConnectionGroupScore[];
+
+    /**
+     * Name of the scoring type.
+     */
     name: string;
 }
 
+/**
+ * Interface representing a connection group score.
+ */
 export interface ConnectionGroupScore {
+    /**
+     * Numerical score of the connection group.
+     */
     score: number;
+
+    /**
+     * String representation of the score.
+     */
     scoreS: string;
+
+    /**
+     * List of connection references associated with the score.
+     */
     conRefL: number[];
 }
 
+/**
+ * Interface representing a request within a connection group.
+ */
 export interface ConnectionGroupRequest {
+    /**
+     * Identifier of the request.
+     */
     id: string;
+
+    /**
+     * Flag indicating whether the request is sent automatically.
+     */
     autosend: boolean;
 }
 
@@ -1328,9 +1408,23 @@ export interface ConnectionGroup {
     bitmask: number;
 }
 
+/**
+ * Interface representing the settings of a connection group.
+ */
 export interface ConnectionGroupSettings {
+    /**
+     * List of connection groups.
+     */
     conGrpL: ConnectionGroup[];
+
+    /**
+     * List of selectable options for connection groups.
+     */
     selectL: Selection[];
+
+    /**
+     * Variant type of the connection group settings.
+     */
     variant: string;
 }
 
@@ -1379,19 +1473,53 @@ export interface ResponseData {
     outConGrpSettings: ConnectionGroupSettings;
 }
 
+/**
+ * Interface representing a graph structure.
+ */
 export interface Graph {
+    /**
+     * Identifier of the graph.
+     */
     id: string;
+
+    /**
+     * Index of the graph.
+     */
     index: number;
 }
 
+/**
+ * Interface representing a sub-graph structure.
+ */
 export interface SubGraph {
+    /**
+     * Identifier of the sub-graph.
+     */
     id: string;
+
+    /**
+     * Index of the sub-graph.
+     */
     index: number;
 }
 
+/**
+     * Interface representing a view.
+     */
 export interface View {
+    /**
+     * Identifier of the view.
+     */
     id: string;
+
+    /**
+     * Index of the view.
+     */
     index: number;
+
+    /**
+     * Type of the view.
+     */
     type: string;
 }
 
