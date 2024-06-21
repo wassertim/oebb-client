@@ -59,6 +59,14 @@ export interface Remark {
     txtN?: string;
 }
 
+export interface PublicationChannel {
+    name: string;
+    fDate: string;
+    fTime: string;
+    tDate: string;
+    tTime: string;
+}
+
 export interface HimMessage {
     hid: string;
     act: boolean;
@@ -81,28 +89,14 @@ export interface HimMessage {
     eDaily: string;
     comp: string;
     catRefL: number[];
-    pubChL: {
-        name: string;
-        fDate: string;
-        fTime: string;
-        tDate: string;
-        tTime: string;
-    }[];
+    pubChL: PublicationChannel[];
     edgeRefL: number[];
 }
 
 export interface Icon {
     res: string;
-    fg?: {
-        r: number;
-        g: number;
-        b: number;
-    };
-    bg?: {
-        r: number;
-        g: number;
-        b: number;
-    };
+    fg?: Color;
+    bg?: Color;
     txt?: string;
     shp?: string;
 }
@@ -130,11 +124,7 @@ export interface DrawStyle {
     sIcoX?: number;
     eIcoX?: number;
     type: string;
-    bg: {
-        r: number;
-        g: number;
-        b: number;
-    };
+    bg: Color;
 }
 
 export interface RealTimeSource {
@@ -144,46 +134,48 @@ export interface RealTimeSource {
     freeTextIdCount: number;
 }
 
+export interface Color {
+    r: number;
+    g: number;
+    b: number;
+}
+
 export interface TimeStyle {
     mode: string;
-    fg?: {
-        r: number;
-        g: number;
-        b: number;
-    };
+    fg?: Color;
     strikeOut?: boolean;
+}
+
+export interface Platform {
+    type: string;
+    txt: string;
+}
+
+export interface TimeFormatStyle {
+    styleX: number;
+}
+
+export interface TimeFormatStyleWithText extends TimeFormatStyle {
+    txtA: string;
 }
 
 export interface DepartureArrival {
     locX: number;
     idx: number;
     dProdX?: number;
-    dPltfS: {
-        type: string;
-        txt: string;
-    };
+    dPltfS: Platform;
     dTimeS: string;
-    dTimeFS: {
-        styleX: number;
-    };
+    dTimeFS: TimeFormatStyle;
     dProgType: string;
     dTZOffset: number;
     type: string;
     aProdX?: number;
-    aPltfS?: {
-        type: string;
-        txt: string;
-    };
+    aPltfS?: Platform;
     aTimeS?: string;
     aTimeR?: string;
     dTimeR?: string;
-    aTimeFS?: {
-        styleX: number;
-    };
-    aTimeFR?: {
-        styleX: number;
-        txtA: string;
-    };
+    aTimeFS?: TimeFormatStyle;
+    aTimeFR?: TimeFormatStyleWithText;
     aProgType?: string;
     aTZOffset?: number;
 }
@@ -192,14 +184,9 @@ export interface Stop {
     locX: number;
     idx: number;
     dProdX: number;
-    dPltfS: {
-        type: string;
-        txt: string;
-    };
+    dPltfS: Platform;
     dTimeS: string;
-    dTimeFS: {
-        styleX: number;
-    };
+    dTimeFS: TimeFormatStyle;
     dProgType: string;
     dDirTxt: string;
     dDirFlg: string;
@@ -207,14 +194,9 @@ export interface Stop {
     type: string;
     border?: boolean;
     aProdX?: number;
-    aPltfS?: {
-        type: string;
-        txt: string;
-    };
+    aPltfS?: Platform;
     aTimeS?: string;
-    aTimeFS?: {
-        styleX: number;
-    };
+    aTimeFS?: TimeFormatStyle;
     aTZOffset?: number;
 }
 
@@ -222,28 +204,7 @@ export interface Frequency {
     minC: number;
     maxC: number;
     numC: number;
-    jnyL: {
-        jid: string;
-        date: string;
-        prodX: number;
-        dirTxt: string;
-        dirFlg: string;
-        stopL: Stop[];
-        ctxRecon: string;
-        subscr: string;
-        prodL: {
-            prodX: number;
-            fLocX: number;
-            tLocX: number;
-            fIdx: number;
-            tIdx: number;
-        }[];
-        dirL: Direction[];
-        sumLDrawStyleX: number;
-        resLDrawStyleX: number;
-        trainStartDate: string;
-        durS: string;
-    }[];
+    jnyL: Journey[];
 }
 
 export interface Section {
@@ -318,16 +279,7 @@ export interface Connection {
     arr: DepartureArrival;
     secL: Section[];
     freq: Frequency;
-    trfRes: {
-        statusCode: string;
-        extContActionBar: {
-            text: string;
-            content: {
-                type: string;
-                content: string;
-            };
-        };
-    };
+    trfRes: TrafficResult;
     conSubscr: string;
     recState: string;
     cksum: string;
@@ -335,71 +287,116 @@ export interface Connection {
     cksumSave: string;
     intvlSubscr: string;
     originType: string;
-    recon: {
-        ctx: string;
-    };
-    durFmt: {
-        styleX: number;
-    };
+    recon: ReconnectionContext;
+    durFmt: DurationFormat;
     hasDelayInfo: boolean;
+}
+
+export interface DurationFormat {
+    styleX: number;
+}
+
+export interface ReconnectionContext {
+    ctx: string;
+}
+
+export interface TrafficResult {
+    statusCode: string;
+    extContActionBar: ExtContActionBar;
+}
+
+export interface ActionBarContent {
+    type: string;
+    content: string;
+}
+
+export interface ExtContActionBar {
+    text: string;
+    content: ActionBarContent;
 }
 
 export interface ServiceResponse {
     id: string;
     meth: string;
     err: string;
-    res: {
-        common: {
-            locL: Location[];
-            prodL: Product[];
-            opL: Operator[];
-            remL: Remark[];
-            himL: HimMessage[];
-            icoL: Icon[];
-            reqLocL: RequestLocation[];
-            himMsgEdgeL: HimMessageEdge[];
-            himMsgCatL: HimMessageCategory[];
-            dirL: Direction[];
-            lDrawStyleL: DrawStyle[];
-            rtSrcL: RealTimeSource[];
-            timeStyleL: TimeStyle[];
-        };
-        outConL: Connection[];
-        outCtxScrB: string;
-        outCtxScrF: string;
-        fpB: string;
-        fpE: string;
-        planrtTS: string;
-        outConGrpSettings: {
-            conGrpL: {
-                name: string;
-                icoX: number;
-                grpid: string;
-                conScoringL: {
-                    type: string;
-                    conScoreL: {
-                        score: number;
-                        scoreS: string;
-                        conRefL: number[];
-                    }[];
-                    name: string;
-                }[];
-                initScoringType: string;
-                requests: {
-                    id: string;
-                    autosend: boolean;
-                }[];
-                scrollable: boolean;
-                bitmask: number;
-            }[];
-            selectL: {
-                icoX: number;
-                name: string;
-                bitIdx: number;
-            }[];
-            variant: string;
-        };
-    };
+    res: ResponseData;
+}
+
+export interface CommonData {
+    locL: Location[];
+    prodL: Product[];
+    opL: Operator[];
+    remL: Remark[];
+    himL: HimMessage[];
+    icoL: Icon[];
+    reqLocL: RequestLocation[];
+    himMsgEdgeL: HimMessageEdge[];
+    himMsgCatL: HimMessageCategory[];
+    dirL: Direction[];
+    lDrawStyleL: DrawStyle[];
+    rtSrcL: RealTimeSource[];
+    timeStyleL: TimeStyle[];
+}
+
+export interface ConnectionGroupScoring {
+    type: string;
+    conScoreL: ConnectionGroupScore[];
+    name: string;
+}
+
+export interface ConnectionGroupScore {
+    score: number;
+    scoreS: string;
+    conRefL: number[];
+}
+
+export interface ConnectionGroupRequest {
+    id: string;
+    autosend: boolean;
+}
+
+export interface ConnectionGroup {
+    name: string;
+    icoX: number;
+    grpid: string;
+    conScoringL: ConnectionGroupScoring[];
+    initScoringType: string;
+    requests: ConnectionGroupRequest[];
+    scrollable: boolean;
+    bitmask: number;
+}
+
+export interface ConnectionGroupSettings {
+    conGrpL: ConnectionGroup[];
+    selectL: Selection[];
+    variant: string;
+}
+
+export interface ResponseData {
+    common: CommonData;
+    outConL: Connection[];
+    outCtxScrB: string;
+    outCtxScrF: string;
+    fpB: string;
+    fpE: string;
+    planrtTS: string;
+    outConGrpSettings: ConnectionGroupSettings;
+}
+
+export interface Graph {
+    id: string;
+    index: number;
+}
+
+export interface SubGraph {
+    id: string;
+    index: number;
+}
+
+export interface View {
+    id: string;
+    index: number;
+    type: string;
 }
 
 export interface Response {
@@ -408,18 +405,8 @@ export interface Response {
     lang: string;
     id: string;
     err: string;
-    graph: {
-        id: string;
-        index: number;
-    };
-    subGraph: {
-        id: string;
-        index: number;
-    };
-    view: {
-        id: string;
-        index: number;
-        type: string;
-    };
+    graph: Graph;
+    subGraph: SubGraph;
+    view: View;
     svcResL: ServiceResponse[];
 }
