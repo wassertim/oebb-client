@@ -15,7 +15,7 @@ import { getTripSearchRequest } from './request.builder';
     // data.svcResL[0].res.outConL.forEach((connection) => {
     //     parseTripData(connection);               
     // });  
-    const tripData = mapTripData(data.svcResL[0].res.outConL[0], data.svcResL[0].res.common.locL);
+    const tripData = mapTripData(data.svcResL[0].res);
     console.log(JSON.stringify(tripData, null, 4));    
 })();
 

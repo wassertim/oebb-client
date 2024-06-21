@@ -1,5 +1,5 @@
 import { MappedSection, MappedTrip } from "./types/types";
-import { Connection, Section, Location } from './types/oebb/response';
+import { Section, Location, ResponseData, CommonData, Product } from './types/oebb/response';
 
 function toReadableDate(isoDateString: string): string {
     return `${isoDateString.substring(6, 8)}.${isoDateString.substring(4, 6)}.${isoDateString.substring(0, 4)}`;
@@ -19,8 +19,14 @@ function toReadableTime(time: string): string {
     return `${time.substring(0, 2)}:${time.substring(2, 4)}`;
 }
 
-function mapSections(sections: Section[], locations: Location[]): MappedSection[] {
+function mapSections(sections: Section[], common: CommonData): MappedSection[] {
+    const locations: Location[] = common.locL;
+    const products: Product[] = common.prodL;
+
     return sections.map(section => {
+        const productIndex = section.jny.prodX;
+        const product = products[productIndex];
+
         return {
             type: section.type,
             departure: {
@@ -28,21 +34,26 @@ function mapSections(sections: Section[], locations: Location[]): MappedSection[
                 locationName: locations[section.dep.locX].name,
                 scheduledTime: toReadableTime(section.dep.dTimeS),
                 realTime: section.dep.dTimeR ? toReadableTime(section.dep.dTimeR) : undefined,
-                platform: section.dep.dPltfS.txt
+                platform: section.dep.dPltfS.txt,
+                product: product.name
             },
             arrival: {
                 locationIndex: section.arr.locX,
                 locationName: locations[section.arr.locX].name,
                 scheduledTime: toReadableTime(section.arr.aTimeS || ''),
                 realTime: section.arr.aTimeR ? toReadableTime(section.arr.aTimeR) : undefined,
-                platform: section.arr.aPltfS?.txt
+                platform: section.arr.aPltfS?.txt,
+                product: product.name
             },
             duration: section.durS
         };
     });
 }
 
-export const mapTripData = (trip: Connection, locations: Location[]): MappedTrip => {
+export const mapTripData = (responseData: ResponseData): MappedTrip => {
+    // mapTripData(data.svcResL[0].res.outConL[0], data.svcResL[0].res.common.locL);
+    const trip = responseData.outConL[0];
+
     return {
         tripId: trip.cid,
         date: toReadableDate(trip.date),
@@ -57,6 +68,6 @@ export const mapTripData = (trip: Connection, locations: Location[]): MappedTrip
             platform: trip.arr.aPltfS?.txt
         },
         delayInfo: trip.hasDelayInfo,
-        sections: mapSections(trip.secL, locations)
+        sections: mapSections(trip.secL, responseData.common)
     };
 };
