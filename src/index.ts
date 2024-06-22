@@ -3,15 +3,10 @@ import { mapTripData } from "./mapper";
 import { Response } from './types/oebb/response';
 import { getConnections as searchTrip } from './oebb.service';
 import { getTripSearchRequest } from './request.builder';
+import { withCache } from './util/cache';
 
 (async () => {
-    let data: Response = readFromFile();
-    if (!data) {
-        data = await searchTrip(getTripSearchRequest());
-        saveAsJson(data);
-    }
-
-    saveAsJson(data);
+    let data = await withCache(searchTrip, true)(getTripSearchRequest());
     // data.svcResL[0].res.outConL.forEach((connection) => {
     //     parseTripData(connection);               
     // });  
