@@ -1,6 +1,6 @@
-import { RequestBody } from './types/oebb/request';
+import { JourneyFilter, RequestBody } from './types/oebb/request';
 
-export const getTripSearchRequest = (): RequestBody => ({
+export const getTripSearchRequest = (journeyFilter: JourneyFilter): RequestBody => ({
     id: "fq4w2zxk2qkdgk4k",
     ver: "1.72",
     lang: "deu",
@@ -44,11 +44,7 @@ export const getTripSearchRequest = (): RequestBody => ({
                 liveSearch: false,
                 maxChg: "1000",
                 jnyFltrL: [
-                    {
-                        type: "PROD",
-                        mode: "INC",
-                        value: 15359
-                    }
+                    journeyFilter
                 ],
                 gisFltrL: [
                     {

@@ -50,24 +50,26 @@ function mapSections(sections: Section[], common: CommonData): MappedSection[] {
     });
 }
 
-export const mapTripData = (responseData: ResponseData): MappedTrip => {
-    // mapTripData(data.svcResL[0].res.outConL[0], data.svcResL[0].res.common.locL);
-    const trip = responseData.outConL[0];
-
-    return {
+export const mapTripData = (responseData: ResponseData): MappedTrip[] => {
+    if (!responseData.outConL) {
+        return [];
+    }
+    return responseData.outConL.map(trip => ({
         tripId: trip.cid,
         date: toReadableDate(trip.date),
         duration: toReadableDuration(trip.dur),
         numberOfChanges: trip.chg,
         departure: {
             time: toReadableTime(trip.dep.dTimeS),
-            platform: trip.dep.dPltfS.txt
+            locationName: responseData.common.locL[trip.dep.locX].name,
+            platform: trip.dep.dPltfS.txt,
         },
         arrival: {
             time: toReadableTime(trip.arr.aTimeS || ''),
-            platform: trip.arr.aPltfS?.txt
+            locationName: responseData.common.locL[trip.arr.locX].name,
+            platform: trip.arr.aPltfS?.txt,
         },
         delayInfo: trip.hasDelayInfo,
         sections: mapSections(trip.secL, responseData.common)
-    };
+    }));
 };
