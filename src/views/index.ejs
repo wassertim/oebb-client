@@ -1,0 +1,71 @@
+<!-- src/views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trip Data</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trip Data</h1>
+    <pre><%= polyLine %></pre>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const map = L.map('map').setView([47.45, 9.68], 10); // Initial view, adjust as needed
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const polyLines = <%- JSON.stringify(polyLine) %>;
+
+            // Function to decode polyline
+            function decodePolyline(encoded) {
+                let points = [];
+                let index = 0, len = encoded.length;
+                let lat = 0, lng = 0;
+
+                while (index < len) {
+                    let b, shift = 0, result = 0;
+                    do {
+                        b = encoded.charCodeAt(index++) - 63;
+                        result |= (b & 0x1f) << shift;
+                        shift += 5;
+                    } while (b >= 0x20);
+                    let dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                    lat += dlat;
+
+                    shift = 0;
+                    result = 0;
+                    do {
+                        b = encoded.charCodeAt(index++) - 63;
+                        result |= (b & 0x1f) << shift;
+                        shift += 5;
+                    } while (b >= 0x20);
+                    let dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                    lng += dlng;
+
+                    points.push([lat / 1e5, lng / 1e5]);
+                }
+
+                return points;
+            }
+
+            // Add polylines to the map
+            polyLines.forEach(polyline => {
+                if (polyline.crdEncYX) {
+                    const decodedPolyline = decodePolyline(polyline.crdEncYX);
+                    L.polyline(decodedPolyline, { color: 'blue' }).addTo(map);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

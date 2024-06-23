@@ -76,7 +76,7 @@ export const getTripSearchRequest = (journeyFilter: JourneyFilter): RequestBody 
                         meta: "bike_speed_normal"
                     }
                 ],
-                getPolyline: false,
+                getPolyline: true,
                 outFrwd: true,
                 outTime: "121304",
                 outDate: "20240621",

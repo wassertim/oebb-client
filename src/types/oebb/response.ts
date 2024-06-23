@@ -1238,6 +1238,19 @@ export interface ServiceResponse {
     res: ResponseData;
 }
 
+export interface Polyline {
+    delta: boolean;
+    dim: number;
+    crdEncYX: string;
+    crdEncS: string;
+    crdEncF: string;
+    ppLocRefL: {
+        ppIdx: number;
+        locX: number;
+    }[];
+    lDrawStyleX: number;
+}
+
 /**
  * Interface representing common data shared across multiple responses.
  */
@@ -1306,6 +1319,11 @@ export interface CommonData {
      * List of time styles.
      */
     timeStyleL: TimeStyle[];
+
+    /**
+     * List of polylines associated with the response.
+     */
+    polyL?: Polyline[];
 }
 
 /**
