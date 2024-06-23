@@ -6,6 +6,7 @@ import { getConnections as searchTrip } from './oebb.service';
 import { getTripSearchRequest } from './request.builder';
 import { withCache } from './util/cache';
 import { ProductBits, generateJourneyFilter } from './journey-filter.generator';
+import polyline from '@mapbox/polyline';
 
 const app = express();
 const port = 3000;
@@ -22,7 +23,10 @@ app.get('/', async (req, res) => {
         const polyLine = data.svcResL[0].res.common.polyL;
         console.log(JSON.stringify(polyLine, null, 4));
         const tripData = mapTripData(data.svcResL[0].res);
-        res.render('index', { tripData, polyLine: polyLine });
+        const polyLines = data.svcResL[0].res.common.polyL?.map((poly: any) => {
+            return polyline.decode(poly.crdEncYX);
+        });
+        res.render('index', { tripData, polyLines });
     } catch (error) {
         res.status(500).send('Error occurred: ' + error);
     }
