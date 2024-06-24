@@ -956,6 +956,18 @@ export interface Journey {
      * Scheduled duration of the journey in HHMM format.
      */
     durS: string;
+
+    /**
+     * Polyline group data for the journey, referencing indices in the common polyline list.
+     */
+    polyG: PolylineGroup;
+}
+
+export interface PolylineGroup {
+    /**
+     * List of indices in the common polyline list.
+     */
+    polyXL: number[];
 }
 
 /**
