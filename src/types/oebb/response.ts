@@ -1250,17 +1250,59 @@ export interface ServiceResponse {
     res: ResponseData;
 }
 
+/**
+ * Represents a polyline in the journey response.
+ */
 export interface Polyline {
+    /**
+     * Indicates if the polyline uses delta encoding.
+     */
     delta: boolean;
+
+    /**
+     * Dimension of the polyline, typically 2 (for 2D coordinates).
+     */
     dim: number;
+
+    /**
+     * Encoded polyline coordinates in YX format.
+     */
     crdEncYX: string;
+
+    /**
+     * Encoded polyline coordinates in S format.
+     */
     crdEncS: string;
+
+    /**
+     * Encoded polyline coordinates in F format.
+     */
     crdEncF: string;
-    ppLocRefL: {
-        ppIdx: number;
-        locX: number;
-    }[];
+
+    /**
+     * List of location references for the polyline.
+     */
+    ppLocRefL: LocationReference[];
+
+    /**
+     * Draw style index for the polyline.
+     */
     lDrawStyleX: number;
+}
+
+/**
+ * Represents a location reference in the polyline.
+ */
+export interface LocationReference {
+    /**
+     * Index of the polyline point.
+     */
+    ppIdx: number;
+
+    /**
+     * Index of the location.
+     */
+    locX: number;
 }
 
 /**

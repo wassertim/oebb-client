@@ -19,14 +19,22 @@ app.set('views', path.join(__dirname, 'views'));
 app.get('/', async (req, res) => {
     try {
         const meansOfTransport = [ProductBits.SBahn, ProductBits.RegionalTrains, ProductBits.LongDistanceTrains];
-        let data = await withCache(searchTrip, true)(getTripSearchRequest(generateJourneyFilter(meansOfTransport)));
-        const polyLine = data.svcResL[0].res.common.polyL;
-        console.log(JSON.stringify(polyLine, null, 4));
-        const tripData = mapTripData(data.svcResL[0].res);
-        const polyLines = data.svcResL[0].res.common.polyL?.map((poly: any) => {
-            return polyline.decode(poly.crdEncYX);
+        const data = await withCache(searchTrip, true)(getTripSearchRequest(generateJourneyFilter(meansOfTransport)));
+
+        
+        // Decode the polylines for each section
+        const sections = data.svcResL[0].res.outConL[0].secL.map((section: any) => {
+            return section.jny.polyG.polyXL.map((polyIndex: number) => {    
+                if (!data.svcResL[0].res.common.polyL) {
+                    throw new Error('No polyline data found');
+                }            
+                return polyline.decode(data.svcResL[0].res.common.polyL[polyIndex].crdEncYX);
+            });
         });
-        res.render('index', { tripData, polyLines });
+
+        const tripData = mapTripData(data.svcResL[0].res);
+
+        res.render('index', { tripData, sections });
     } catch (error) {
         res.status(500).send('Error occurred: ' + error);
     }
